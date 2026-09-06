@@ -1,0 +1,34 @@
+# ARQUIVOS GERAIS DO SISTEMA & AMBIENTE
+.DS_Store
+Thumbs.db
+.cache/
+*.log
+*.tmp
+
+# CHAVES & SEGREDOS (Segurança)
+*.pem
+*.key
+.env
+.env.*
+!.env.example
+
+# APLICATIVO (Node.js / Frontend)
+app/node_modules/
+app/build/
+app/dist/
+app/.next/
+
+
+# TERRAFORM
+
+# Ignorar diretório de plugins e módulos baixados
+terraform/.terraform/
+
+# Ignorar arquivos de estado (contêm dados sensíveis do ambiente)
+terraform/*.tfstate
+terraform/*.tfstate.backup
+terraform/.terraform.lock.hcl
+
+# ANSIBLE
+*.retry
+ansible/inventory.ini
