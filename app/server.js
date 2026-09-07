@@ -1,16 +1,13 @@
-import express, { json } from 'express';
+import express from 'express';
 
 const port = process.env.PORT || 3000;
 const host = '127.0.0.1';
 
 const app = express();
- 
-const response = {
-    message: 'Olá, mundo!',
-}
+app.disable('x-powered-by');
 
 app.get('/', (_req, res) => {
-    res.json(response);
+    res.send('Hello World!');
 });
 
 app.listen(port, host, () => {
