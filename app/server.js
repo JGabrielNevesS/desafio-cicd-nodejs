@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { json } from 'express';
 
 const port = process.env.PORT || 3000;
 const host = '127.0.0.1';
@@ -10,9 +10,9 @@ const response = {
 }
 
 app.get('/', (_req, res) => {
-    res.send(response);
+    res.json(response);
 });
 
-app.listen(host ,port, () => {
+app.listen(port, host, () => {
     console.log(`Servidor rodando em http://${host}:${port}`);
 }); 
