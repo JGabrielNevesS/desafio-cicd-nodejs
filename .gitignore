@@ -27,7 +27,8 @@ terraform/.terraform/
 # Ignorar arquivos de estado (contêm dados sensíveis do ambiente)
 terraform/*.tfstate
 terraform/*.tfstate.backup
-terraform/.terraform.lock.hcl
+terraform/*.tfvars
+terraform/*.tfvars.json
 
 # ANSIBLE
 *.retry
