@@ -1,0 +1,9 @@
+#SPDX-License-Identifier: MIT-0
+---
+# handlers file for app
+
+- name: Reiniciar serviço da aplicação
+  ansible.builtin.systemd:
+    name: node-service
+    state: restarted
+    enabled: true

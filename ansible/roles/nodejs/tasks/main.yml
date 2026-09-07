@@ -1,0 +1,41 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for nodejs
+
+# SPDX-License-Identifier: MIT-0
+
+- name: Instalar dependências para o repositório NodeSource
+  ansible.builtin.apt:
+    name:
+      - ca-certificates
+      - python3-debian
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Adicionar repositório NodeSource 24.x
+  ansible.builtin.deb822_repository:
+    name: nodesource
+    types:
+      - deb
+    uris:
+      - https://deb.nodesource.com/node_24.x
+    suites:
+      - nodistro
+    components:
+      - main
+    architectures:
+      - amd64
+    signed_by: https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key
+    state: present
+  register: nodesource_repository
+
+- name: Atualizar cache após adicionar o NodeSource
+  ansible.builtin.apt:
+    update_cache: true
+  when: nodesource_repository.changed
+
+- name: Instalar Node.js
+  ansible.builtin.apt:
+    name: nodejs
+    state: present

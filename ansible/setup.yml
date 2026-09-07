@@ -1,0 +1,14 @@
+---
+- name: CI/CD Pipeline Setup
+  hosts: servers
+  become: true
+
+  roles:
+    - role: nodejs
+      tags: [nodejs]
+      
+    - role: nginx
+      tags: [nginx]
+
+    - role: app
+      tags: [app]

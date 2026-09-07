@@ -1,0 +1,42 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for nginx
+
+- name: Instalar Nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+    update_cache: true
+
+- name: Configurar site do serviço Node
+  ansible.builtin.template:
+    src: node-service.conf.j2
+    dest: /etc/nginx/sites-available/node-service
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Recarregar Nginx
+
+- name: Habilitar site do serviço Node
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/node-service
+    dest: /etc/nginx/sites-enabled/node-service
+    state: link
+  notify: Recarregar Nginx
+
+- name: Desabilitar site padrão
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Recarregar Nginx
+
+- name: Validar configuração do Nginx
+  ansible.builtin.command: /usr/sbin/nginx -t
+  changed_when: false
+
+- name: Iniciar e habilitar Nginx
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true
+

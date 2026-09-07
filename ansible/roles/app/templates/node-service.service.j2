@@ -1,0 +1,20 @@
+[Unit]
+Description=Servidor Node.js
+After=network.target
+
+[Service]
+Type=simple
+User=nodeapp
+Group=nodeapp
+WorkingDirectory=/opt/app/app
+
+Environment=NODE_ENV=production
+Environment=PORT=3000
+
+ExecStart=/usr/bin/node server.js
+
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

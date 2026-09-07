@@ -1,0 +1,73 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for app
+
+- name: Garantir o git e acl instalado
+  ansible.builtin.apt:
+    name: 
+      - git
+      - acl
+    state: present
+    update_cache: true
+
+- name: Criar grupo para a aplicação
+  ansible.builtin.group:
+    name: nodeapp
+    state: present
+
+- name: Criar usuario para a aplicação
+  ansible.builtin.user:
+    name: nodeapp
+    comment: "Usuário para a aplicação"
+    shell: /usr/sbin/nologin
+    create_home: true
+    state: present
+    group: nodeapp
+    home: /var/lib/nodeapp
+    system: true
+
+- name: Criar diretório para a aplicação
+  ansible.builtin.file:
+    path: /opt/app
+    state: directory 
+    owner: nodeapp
+    group: nodeapp
+    mode: "0755"
+
+- name: Clonar repositório da aplicação
+  become: true
+  become_user: nodeapp
+  ansible.builtin.git:
+    repo: 'https://github.com/JGabrielNevesS/desafio-cicd-nodejs.git'
+    dest: /opt/app
+    version: main
+  register: app_repository
+  notify:
+    - Reiniciar serviço da aplicação
+
+- name: Instalar dependências da aplicação
+  become: true
+  become_user: nodeapp
+  community.general.npm:
+    ci: true
+    path: /opt/app/app
+    production: true
+  when: app_repository.changed
+
+- name: Copiar arquivo de serviço systemd para a aplicação
+  ansible.builtin.template:
+    src: node-service.service.j2
+    dest: /etc/systemd/system/node-service.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reiniciar serviço da aplicação
+
+- name: Habilitar e iniciar o serviço da aplicação
+  ansible.builtin.systemd_service:
+    name: node-service
+    enabled: true
+    state: started
+    daemon_reload: true
+
