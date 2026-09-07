@@ -40,7 +40,7 @@
   ansible.builtin.git:
     repo: 'https://github.com/JGabrielNevesS/desafio-cicd-nodejs.git'
     dest: /opt/app
-    version: main
+    version: "{{ app_version }}"
   register: app_repository
   notify:
     - Reiniciar serviço da aplicação
